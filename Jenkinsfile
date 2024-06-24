@@ -17,13 +17,24 @@ pipeline {
                 }
             }
         }
+        stage('gitclone') {
+            steps {
+                git url: "https://github.com/Gerardbulky/jenkins-server-repo.git", branch: "main"
+                echo "Workspace Path: ${WORKSPACE}/deployment.yaml"
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                sh "docker build -t bossmanjerry/vault-images:${env.BUILD_NUMBER} ."
+            }
+        }
         stage("Deploy to EKS") {
             steps {
                 script {
-                    dir('kubernetes') {
+                    dir('2-terraform-eks-deployment') {
                         sh "aws eks update-kubeconfig --name my-eks-cluster"
-                        sh "kubectl apply -f nginx-deployment.yaml"
-                        sh "kubectl apply -f nginx-service.yaml"
+                        sh "kubectl apply -f deployment.yaml"
+                        sh "kubectl apply -f service.yaml"
                     }
                 }
             }
