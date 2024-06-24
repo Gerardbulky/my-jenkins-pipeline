@@ -31,7 +31,7 @@ pipeline {
         stage("Deploy to EKS") {
             steps {
                 script {
-                    dir('2-terraform-eks-deployment') {
+                    dir('kubernetes') {
                         sh "aws eks update-kubeconfig --name my-eks-cluster"
                         sh "kubectl apply -f deployment.yaml"
                         sh "kubectl apply -f service.yaml"

@@ -11,7 +11,7 @@ module "eks" {
 
     tags = {
         environment = "development"
-        application = "nginx-app"
+        application = "vault-images"
     }
 
     eks_managed_node_groups = {
